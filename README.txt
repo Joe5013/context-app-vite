@@ -24,5 +24,61 @@ Install: npm install react-router-dom
 
 If the node-modules folder is missing, reinstall this folder with    npm install
 
+Now install eslint...
 npm install eslint --save-dev
 npx eslint --init
+npm install --save-dev --save-exact eslint-plugin-react-hooks eslint-plugin-react-refresh eslint-plugin-prettier eslint-config-prettier prettier @eslint/js globals
+replace the contents of eslint.config.js with...
+import js from '@eslint/js';
+import globals from 'globals';
+import reactHooks from 'eslint-plugin-react-hooks';
+import reactRefresh from 'eslint-plugin-react-refresh';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+
+export default [
+  { ignores: ['dist'] },
+  {
+    files: ['**/*.{js,jsx}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: { ...globals.browser },
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
+    },
+    plugins: {
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+    },
+  },
+  eslintPluginPrettierRecommended,
+];
+
+Then run     npm run lint -- --fix      
+this will fix other files
+Then run   npm run lint    it should run without errors.
+
+
+Now install prettier
+npm install --save-dev --save-exact prettier eslint-config-prettier eslint-plugin-prettier
+Create a file in root   .prettierrc.json    with this contents
+{
+  "semi": true,
+  "trailingComma": "es5",
+  "singleQuote": true,
+  "printWidth": 80,
+  "tabWidth": 2,
+  "useTabs": false,
+  "bracketSpacing": true,
+  "endOfLine": "lf"
+}
